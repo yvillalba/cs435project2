@@ -104,30 +104,15 @@ class GraphSearch {
      void BFTHelper(Graph  &graph1, queue<graphNode*> &q){
 	        if (q.empty())
 		          return;
-          // pop front node from queue and print it
           graphNode* v = q.front();
          // cout<<endl<<v->data<<endl;
-          q.pop();
-          //cout << v->data << " ";
+          q.pop();// pop front node from queue and print it
           for (auto u : graph1.getallNodes()){
-            if (!u->visited){// mark it discovered and push it into queue
+            if (!u->visited){// mark it visited and push it into queue
 			          u->visited = true;
 			          q.push(u);
 		        }
 	        }
-
-
-        /*
-          while (v != NULL) { 
-            //cout << v->data << " "; 
-            if (!(v)->visited)	{		// mark it visited and push it into queue
-			          (v)->visited = true;
-			          q.push(v);
-		          }
-            v = v->next; 
-
-          } 
-          */  	
 	        
         	BFTHelper(graph1, q);
       }
@@ -153,20 +138,10 @@ class GraphSearch {
     }
 };
 void printGraph(set <graphNode*> allNodes) { 
-    
-        // prints the element 
+    // prints the element 
     cout << "\nThe elements are: "; 
     for (auto it = allNodes.begin(); it != allNodes.end(); it++) 
         cout << (*it)->data << " "; 
-  
-
-       // vector<graphNode*>  = graph->neighbors[i]; 
-        //cout << endl << "Adjacency list of vertex "
-        //<< i << endl; 
-  
-      
-       // cout << endl; 
-    
 } 
 int main(){
    int n = 6; 
