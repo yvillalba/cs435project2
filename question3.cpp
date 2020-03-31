@@ -12,6 +12,7 @@ struct graphNode {
    
     string data;
     vector<graphNode*> neighbors;
+    vector<vector<graphNode*>> adjList;
     graphNode* next;
     bool visited;
    
@@ -76,8 +77,11 @@ Graph createLinkedList(int n){
       node[i] = graph1.addNode(nodeVal);
     }
     int i;
+    
     for (i = 0; i < n-1; i++){// add edges to the directed graph
         node[i]->next = node[i+1]; // Link first node with second
+        (*node)->neighbors.push_back(node[i+1]);
+        
     }
     return graph1;
 
@@ -86,8 +90,7 @@ class GraphSearch {
   private:
        set<graphNode*> nodes;
        set<graphNode*> nodes1;
-       //graphNode *first;
-       // vector<graphNode*> vertices;
+
   public:
      
   //********************************question 3f)*******************************
@@ -97,7 +100,7 @@ class GraphSearch {
         graphNode* v = q.front();
         nodes.insert(v);
         q.pop();// pop front node from queue 
-        for (auto u : graph1.getallNodes()){
+         for (auto u : v->neighbors){
           if (!u->visited){// mark it visited and push it into queue
               u->visited = true;
               q.push(u);
@@ -129,11 +132,14 @@ class GraphSearch {
               node = q.front();// pop front node from queue
               q.pop();
               nodes1.insert(node);
-              for (auto u : graph1.getallNodes())
+              //cout<<endl<<endl;
+              for (auto u :node->neighbors){
+                  //cout<<u->data<<endl;
                   if (!u->visited){// mark it visited and push it into queue
 			              u->visited = true;
 			              q.push(u);
 		              }
+              }
 	        }
       }
 
