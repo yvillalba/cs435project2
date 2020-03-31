@@ -24,6 +24,8 @@ void printList(graphNode* n)
         n = n->next; 
     } 
 } 
+
+//********************************question 3a)*******************************
 class Graph {
   private:
        //graphNode *first;
@@ -59,7 +61,7 @@ class Graph {
     }
   
 };
- 
+//********************************question 3b)******************************* 
 Graph createRandomUnweightedGraphIter(int n){
    Graph graph1;
    graphNode**	node = new graphNode*[n]();
@@ -75,7 +77,7 @@ Graph createRandomUnweightedGraphIter(int n){
   return graph1;
 
 }
-
+//********************************question 3c)*******************************
 Graph createLinkedList(int n){
    Graph graph1;
    // allocate memory
@@ -86,10 +88,8 @@ Graph createLinkedList(int n){
 			node[i] = graph1.addNode(nodeVal);
     }
     int i;
-		// add edges to the directed graph
-		for (i = 0; i < n-1; i++){
-      node[i]->next = node[i+1]; // Link first node with second 
-      
+    for (i = 0; i < n-1; i++){// add edges to the directed graph
+        node[i]->next = node[i+1]; // Link first node with second 
 		}
      //cout<<endl;
      //printList(node[0]);
@@ -98,14 +98,18 @@ Graph createLinkedList(int n){
 }
 class GraphSearch {
   private:
+       set<graphNode*> nodes;
+       set<graphNode*> nodes1;
        //graphNode *first;
        // vector<graphNode*> vertices;
   public:
-     void BFTHelper(Graph  &graph1, queue<graphNode*> &q){
+  //********************************question 3f)*******************************
+     void BFTHelper(Graph  graph1, queue<graphNode*> &q){
 	        if (q.empty())
 		          return;
           graphNode* v = q.front();
          // cout<<endl<<v->data<<endl;
+         nodes.insert(v);
           q.pop();// pop front node from queue and print it
           for (auto u : graph1.getallNodes()){
             if (!u->visited){// mark it visited and push it into queue
@@ -117,8 +121,7 @@ class GraphSearch {
         	BFTHelper(graph1, q);
       }
 
-     set<graphNode*> BFTRec(Graph graph1){
-        set<graphNode*> nodes; 
+     set<graphNode*> BFTRec(Graph graph1){ 
         set<graphNode*> allNodes=graph1.getallNodes();
         queue<graphNode*> q;// create a queue 
 
@@ -130,9 +133,40 @@ class GraphSearch {
                     q.push(*node);// push source vertex into the queue
 	              		BFTHelper(graph1, q); // start BFS traversal from vertex node
 		            }
-                nodes.insert(*node);
+                //nodes.insert(*node);
          }
         return nodes;
+    }
+     //********************************question 3g)*******************************
+     void BFTIterHelper(Graph  graph1, graphNode* node){
+          queue<graphNode*> q;// create a queue used to do BFS
+        	node->visited = true;// mark source vertex as visited
+          q.push(node);// push source vertex into the queue
+          while (!q.empty())	{
+              node = q.front();// pop front node from queue
+              q.pop();
+              nodes1.insert(node);
+              for (auto u : graph1.getallNodes())
+                  if (!u->visited){// mark it visited and push it into queue
+			              u->visited = true;
+			              q.push(u);
+		              }
+	        }
+      }
+
+     set<graphNode*> BFTIter(Graph graph1){
+        set<graphNode*> allNodes=graph1.getallNodes();
+      
+	       // Do BFT traversal from all  nodes 
+         for (auto node = allNodes.begin(); node != allNodes.end(); node++){
+           //cout<<endl<<(*node)->visited<<endl;
+              if ((*node)->visited == false){
+                  	
+	              		BFTIterHelper(graph1, *node); // start BFS traversal from vertex node
+		            }
+                
+         }
+        return nodes1;
     }
 };
 void printGraph(set <graphNode*> allNodes) { 
@@ -144,12 +178,18 @@ void printGraph(set <graphNode*> allNodes) {
 int main(){
    int n = 6; 
    Graph graph1=createRandomUnweightedGraphIter(n);
+   cout << "\ncreateRandomUnweightedGraphIter for GRAPH1: "; 
    printGraph(graph1.getallNodes());
-   Graph graph2=createLinkedList(n);
-   printGraph(graph2.getallNodes());
    GraphSearch BFT;
-    
+   
+   Graph graph2=createLinkedList(n);
+   cout << "\n\ncreateLinkedList for GRAPH2: "; 
+   printGraph(graph2.getallNodes());
+    cout << "\n\nBFTRec--createLinkedList: "; 
    printGraph(BFT.BFTRec(graph2));
+    cout << "\n\nBFTIter--createLinkedList: "; 
+   Graph graph3=createLinkedList(n);
+   printGraph(BFT.BFTIter(graph3));
   // removeUndirectedEdges(b,c);
   return 0;
 }
