@@ -16,14 +16,6 @@ struct graphNode {
     bool visited;
    
 }; 
-// This function prints contents of linked list starting from the given node 
-void printList(graphNode* n) 
-{ 
-    while (n != NULL) { 
-        cout << n->data << " "; 
-        n = n->next; 
-    } 
-} 
 
 //********************************question 3a)*******************************
 class Graph {
@@ -79,10 +71,9 @@ Graph createRandomUnweightedGraphIter(int n){
 }
 //********************************question 3c)*******************************
 Graph createLinkedList(int n){
-   Graph graph1;
-   // allocate memory
-	 graphNode**	node = new graphNode*[n]();// initialize head pointer for all vertices
-   for (int i = 0; i < n; ++i){
+    Graph graph1;
+    graphNode**	node = new graphNode*[n]();// initialize head pointer for all vertices
+    for (int i = 0; i < n; ++i){
       string nodeVal=to_string(i);
       node[i] = graph1.addNode(nodeVal);
     }
@@ -90,9 +81,7 @@ Graph createLinkedList(int n){
     for (i = 0; i < n-1; i++){// add edges to the directed graph
         node[i]->next = node[i+1]; // Link first node with second
     }
-     //cout<<endl;
-     //printList(node[0]);
-     return graph1;
+    return graph1;
 
 }
 class GraphSearch {
@@ -105,20 +94,18 @@ class GraphSearch {
      
   //********************************question 3f)*******************************
      void BFTHelper(Graph  graph1, queue<graphNode*> &q){
-	        if (q.empty())
-		          return;
-          graphNode* v = q.front();
-         // cout<<endl<<v->data<<endl;
-         nodes.insert(v);
-          q.pop();// pop front node from queue and print it
-          for (auto u : graph1.getallNodes()){
-            if (!u->visited){// mark it visited and push it into queue
-			          u->visited = true;
-			          q.push(u);
-		        }
-	        }
-	        
-        	BFTHelper(graph1, q);
+        if (q.empty())
+            return;
+        graphNode* v = q.front();
+        nodes.insert(v);
+        q.pop();// pop front node from queue 
+        for (auto u : graph1.getallNodes()){
+          if (!u->visited){// mark it visited and push it into queue
+              u->visited = true;
+              q.push(u);
+              }
+          }
+          BFTHelper(graph1, q);
       }
 
      set<graphNode*> BFTRec(Graph graph1){ 
@@ -161,11 +148,9 @@ class GraphSearch {
          for (auto node = allNodes.begin(); node != allNodes.end(); node++){
            //cout<<endl<<(*node)->visited<<endl;
               if ((*node)->visited == false){
-                  	
-	              		BFTIterHelper(graph1, *node); // start BFS traversal from vertex node
-		            }
-                
-         }
+                BFTIterHelper(graph1, *node); // start BFS traversal from vertex node
+              }
+        }
         return nodes1;
     }
 };
