@@ -4,8 +4,9 @@
 #include <time.h>
 #include <stdlib.h>
 #include <set>
-#include<string> // for string and to_string() 
-#include<queue>
+#include <string> // for string and to_string() 
+#include <queue>
+#include <stack>
 using namespace std; 
   
 struct graphNode { 
@@ -26,11 +27,10 @@ class Graph {
      set<graphNode*> vertices;
      graphNode* addNode(string nodeVal){
         graphNode* node = new graphNode; 
-        node->data = nodeVal;// assign data in first node 
+        node->data = nodeVal;// assign data to the new node 
         //node->neighbors =  
         node->next =NULL;
         node->visited = false;
-        //verticesNoNeigh.insert(node);
         return node;
     }
     void addUndirectedEdge(graphNode* first,graphNode* second){
@@ -59,7 +59,6 @@ Graph createRandomUnweightedGraphIter(int n){
     graphNode**	node = new graphNode*[n]();
     for (int i = 0; i < n; ++i){
       string nodeVal=to_string(i);
-      cout<<nodeVal<<endl;
       node[i] = graph1.addNode(nodeVal);
     }
     int i;
@@ -92,14 +91,14 @@ Graph createLinkedList(int n){
 class GraphSearch {
   private:
        set<graphNode*> nodes;
-       set<graphNode*> nodes1;
-       set<graphNode*> nodes2;
+       set<graphNode*> nodes4;
 
   public:
+  //********************************question 3d)*******************************
      void DFSRecHelper(graphNode* start,graphNode* end){
-       //cout<<"starjjjjjjt: ";
+
         start->visited = true;// mark source vertex as visited
-        nodes2.insert(start);
+        nodes.insert(start);
         if (start->data==end->data){ 
            return;}
         for (auto u : start->neighbors){  // Recur for all the vertices adjacent 
@@ -109,11 +108,31 @@ class GraphSearch {
           }
      }
      set<graphNode*> DFSRec(graphNode* start,graphNode* end){
-        
+        nodes.clear(); 
         // Call the recursive helper function to store the visited node
         DFSRecHelper(start, end); 
-        return nodes2;
+        return nodes;
      }
+  //********************************question 3e)*******************************
+  set<graphNode*> DFSIter(graphNode* start,graphNode* end){
+    nodes.clear(); 
+    stack<graphNode*> stack; // Create a stack for DFS
+    stack.push(start); // Push the source node. 
+    while (!stack.empty()) { 
+        start = stack.top(); 
+        stack.pop(); // Pop a vertex from stack
+        if (!start->visited){// mark it visited and push it into queue
+              start->visited = true;
+              nodes.insert(start);
+              }
+        for (auto u : start->neighbors){  // go through  all the vertices adjacent 
+          if (!u->visited){
+             stack.push(u); 
+              }
+          }
+    } 
+        return nodes;
+  }
      
   //********************************question 3f)*******************************
      void BFTHelper(Graph  graph1, queue<graphNode*> &q){
@@ -132,6 +151,7 @@ class GraphSearch {
       }
 
      set<graphNode*> BFTRec(Graph graph1){
+        nodes.clear(); 
         set<graphNode*> allNodes=graph1.vertices;
         queue<graphNode*> q;// create a queue 
         // Do BFT traversal from all  nodes 
@@ -153,7 +173,7 @@ class GraphSearch {
           while (!q.empty())	{
               node = q.front();// pop front node from queue
               q.pop();
-              nodes1.insert(node);
+              nodes.insert(node);
               //cout<<endl<<endl;
               for (auto u :node->neighbors){
                   //cout<<u->data<<endl;
@@ -166,6 +186,7 @@ class GraphSearch {
       }
 
      set<graphNode*> BFTIter(Graph graph1){
+        nodes.clear(); 
         set<graphNode*> allNodes=graph1.vertices;
       
 	       // Do BFT traversal from all  nodes 
@@ -175,16 +196,10 @@ class GraphSearch {
                 BFTIterHelper(graph1, *node); // start BFS traversal from vertex node
               }
         }
-        return nodes1;
+        return nodes;
     }
 };
-void resetNodestounvisited(Graph  graph1){
-        set<graphNode*> allNodes=graph1.getallNodes();
-        // Do BFT traversal from all  nodes 
-        for (auto node = allNodes.begin(); node != allNodes.end(); node++){
-            (*node)->visited = false;
-        }
-}
+
 
 //********************************question 3h)*******************************
  set<graphNode*>  BFTRecLinkedList(Graph  graph2) {
@@ -205,6 +220,13 @@ graphNode* getNode(Graph graph2,string nodeValue){
   }
   return NULL;
 
+}
+void resetNodestounvisited(Graph  graph1){
+        set<graphNode*> allNodes=graph1.getallNodes();
+        // Do BFT traversal from all  nodes 
+        for (auto node = allNodes.begin(); node != allNodes.end(); node++){
+            (*node)->visited = false;
+        }
 }
 void printGraph(set <graphNode*> allNodes) { 
     // prints the element 
@@ -227,9 +249,14 @@ int main(){
    graphNode* end=getNode(graph2,"4");
    cout << "\n\nDFSRec--createLinkedList for GRAPH2:: ";
    printGraph(BFT.DFSRec(start,end));
+
+   cout << "\n\nDFSIter--createLinkedList for GRAPH2:: ";
+   printGraph(BFT.DFSIter(start,end));
+   
    cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
    resetNodestounvisited(graph2);
    printGraph(BFTRecLinkedList(graph2));
+
    cout << "\n\nBFTIter--createLinkedList for GRAPH2:: "; 
    resetNodestounvisited(graph2);
    printGraph(BFTIterLinkedList(graph2));
