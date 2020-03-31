@@ -103,6 +103,7 @@ class GraphSearch {
        //graphNode *first;
        // vector<graphNode*> vertices;
   public:
+     
   //********************************question 3f)*******************************
      void BFTHelper(Graph  graph1, queue<graphNode*> &q){
 	        if (q.empty())
@@ -169,6 +170,13 @@ class GraphSearch {
         return nodes1;
     }
 };
+void resetNodestounvisited(Graph  graph1){
+        set<graphNode*> allNodes=graph1.getallNodes();
+        // Do BFT traversal from all  nodes 
+        for (auto node = allNodes.begin(); node != allNodes.end(); node++){
+            (*node)->visited = false;
+        }
+     }
 void printGraph(set <graphNode*> allNodes) { 
     // prints the element 
     cout << "\nThe elements are: "; 
@@ -185,11 +193,11 @@ int main(){
    Graph graph2=createLinkedList(n);
    cout << "\n\ncreateLinkedList for GRAPH2: "; 
    printGraph(graph2.getallNodes());
-    cout << "\n\nBFTRec--createLinkedList: "; 
+    cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
    printGraph(BFT.BFTRec(graph2));
-    cout << "\n\nBFTIter--createLinkedList: "; 
-   Graph graph3=createLinkedList(n);
-   printGraph(BFT.BFTIter(graph3));
+    cout << "\n\nBFTIter--createLinkedList for GRAPH2:: "; 
+   resetNodestounvisited(graph2);
+   printGraph(BFT.BFTIter(graph2));
   // removeUndirectedEdges(b,c);
   return 0;
 }
