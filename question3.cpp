@@ -91,8 +91,6 @@ Graph createLinkedList(int n){
 class GraphSearch {
   private:
        set<graphNode*> nodes;
-       set<graphNode*> nodes4;
-
   public:
   //********************************question 3d)*******************************
      void DFSRecHelper(graphNode* start,graphNode* end){
@@ -116,18 +114,23 @@ class GraphSearch {
   //********************************question 3e)*******************************
   set<graphNode*> DFSIter(graphNode* start,graphNode* end){
     nodes.clear(); 
-    stack<graphNode*> stack; // Create a stack for DFS
-    stack.push(start); // Push the source node. 
-    while (!stack.empty()) { 
-        start = stack.top(); 
-        stack.pop(); // Pop a vertex from stack
-        if (!start->visited){// mark it visited and push it into queue
-              start->visited = true;
+    stack<graphNode*> stackNode; // Create a stack for DFS
+   // cout<<"data "<<end->data;
+    stackNode.push(start); // Push the source node. 
+    while (!stackNode.empty()) { 
+        start = stackNode.top(); 
+        stackNode.pop(); // Pop a vertex from stack
+        if (!start->visited){
+              start->visited = true;// mark it visited
               nodes.insert(start);
               }
+      //  cout<<"data  "<<start->data;
+        if (start->data==end->data){ 
+           break;}
         for (auto u : start->neighbors){  // go through  all the vertices adjacent 
+          //cout<<"data  "<<u->data<<u->visited;
           if (!u->visited){
-             stack.push(u); 
+             stackNode.push(u); 
               }
           }
     } 
@@ -249,7 +252,7 @@ int main(){
    graphNode* end=getNode(graph2,"4");
    cout << "\n\nDFSRec--createLinkedList for GRAPH2:: ";
    printGraph(BFT.DFSRec(start,end));
-
+   resetNodestounvisited(graph2);
    cout << "\n\nDFSIter--createLinkedList for GRAPH2:: ";
    printGraph(BFT.DFSIter(start,end));
    
