@@ -24,14 +24,15 @@ class Graph {
        //graphNode *first;
        // vector<graphNode*> vertices;
   public:
-     set<graphNode*> vertices;
+
+     set<graphNode*> vertices;//this variable was created to store  the nodes with edges from example node 1 has edge to 2, node 2 has edge to3 , 3 edge to null
      graphNode* addNode(string nodeVal){
         graphNode* node = new graphNode; 
         node->data = nodeVal;// assign data in first node 
         //node->neighbors =  
         node->next =NULL;
         node->visited = false;
-        vertices.insert(node);
+        //verticesNoNeigh.insert(node);
         return node;
     }
     void addUndirectedEdge(graphNode* first,graphNode* second){
@@ -80,7 +81,9 @@ Graph createLinkedList(int n){
     
     for (i = 0; i < n-1; i++){// add edges to the directed graph
         node[i]->next = node[i+1]; // Link first node with second
-        (*node)->neighbors.push_back(node[i+1]);
+        node[i]->neighbors.push_back(node[i+1]);
+       
+        graph1.vertices.insert(node[i]);
         
     }
     return graph1;
@@ -90,8 +93,30 @@ class GraphSearch {
   private:
        set<graphNode*> nodes;
        set<graphNode*> nodes1;
+       set<graphNode*> nodes2;
 
   public:
+     void DFSRecHelper(graphNode* start,graphNode* end){
+       cout<<"starjjjjjjt: ";
+        //start->visited = true;// mark source vertex as visited
+        //nodes2.insert(start);
+        /*if (start->data==end->data){
+              cout<<"starjjjjjjt: "<<end->data<<endl;
+  
+           return;}
+        for (auto u : start->neighbors){  // Recur for all the vertices adjacent 
+          cout<<"starjjjjjjt: "<<u->data<<endl;
+          if (!u->visited){
+             DFSRecHelper(u,end);
+              }
+          }*/
+     }
+     set<graphNode*> DFSRec(graphNode* start,graphNode* end){
+        
+        // Call the recursive helper function to store the visited node
+        DFSRecHelper(start, end); 
+        return nodes2;
+     }
      
   //********************************question 3f)*******************************
      void BFTHelper(Graph  graph1, queue<graphNode*> &q){
@@ -110,7 +135,7 @@ class GraphSearch {
       }
 
      set<graphNode*> BFTRec(Graph graph1){
-        set<graphNode*> allNodes=graph1.getallNodes();
+        set<graphNode*> allNodes=graph1.vertices;
         queue<graphNode*> q;// create a queue 
         // Do BFT traversal from all  nodes 
         for (auto node = allNodes.begin(); node != allNodes.end(); node++){
@@ -144,7 +169,7 @@ class GraphSearch {
       }
 
      set<graphNode*> BFTIter(Graph graph1){
-        set<graphNode*> allNodes=graph1.getallNodes();
+        set<graphNode*> allNodes=graph1.vertices;
       
 	       // Do BFT traversal from all  nodes 
          for (auto node = allNodes.begin(); node != allNodes.end(); node++){
@@ -174,6 +199,16 @@ set<graphNode*>  BFTIterLinkedList(Graph  graph2) {
     GraphSearch BFT;
     return BFT.BFTIter(graph2);
 }
+graphNode* getNode(Graph graph2,string nodeValue){
+  
+  for (auto u : graph2.vertices){
+    if (u->data==nodeValue){
+        return u;
+    }
+  }
+  return NULL;
+
+}
 void printGraph(set <graphNode*> allNodes) { 
     // prints the element 
     cout << "\nThe elements are: "; 
@@ -190,12 +225,18 @@ int main(){
    Graph graph2=createLinkedList(n);
    cout << "\n\ncreateLinkedList for GRAPH2: "; 
    printGraph(graph2.getallNodes());
-    cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
+
+   graphNode* start=getNode(graph2,"2");
+   graphNode* end=getNode(graph2,"4");
+   cout << "\n\nDFSRec--createLinkedList for GRAPH2:: ";
+   printGraph(BFT.DFSRec(start,end));
+   cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
+   resetNodestounvisited(graph2);
    printGraph(BFTRecLinkedList(graph2));
-    cout << "\n\nBFTIter--createLinkedList for GRAPH2:: "; 
+   cout << "\n\nBFTIter--createLinkedList for GRAPH2:: "; 
    resetNodestounvisited(graph2);
    printGraph(BFTIterLinkedList(graph2));
-  // removeUndirectedEdges(b,c);
+  // removeUndirectedEdges(b,c);*/
   return 0;
 }
  
