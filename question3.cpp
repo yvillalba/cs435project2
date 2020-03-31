@@ -97,19 +97,16 @@ class GraphSearch {
 
   public:
      void DFSRecHelper(graphNode* start,graphNode* end){
-       cout<<"starjjjjjjt: ";
-        //start->visited = true;// mark source vertex as visited
-        //nodes2.insert(start);
-        /*if (start->data==end->data){
-              cout<<"starjjjjjjt: "<<end->data<<endl;
-  
+       //cout<<"starjjjjjjt: ";
+        start->visited = true;// mark source vertex as visited
+        nodes2.insert(start);
+        if (start->data==end->data){ 
            return;}
         for (auto u : start->neighbors){  // Recur for all the vertices adjacent 
-          cout<<"starjjjjjjt: "<<u->data<<endl;
           if (!u->visited){
              DFSRecHelper(u,end);
               }
-          }*/
+          }
      }
      set<graphNode*> DFSRec(graphNode* start,graphNode* end){
         
@@ -226,7 +223,7 @@ int main(){
    cout << "\n\ncreateLinkedList for GRAPH2: "; 
    printGraph(graph2.getallNodes());
 
-   graphNode* start=getNode(graph2,"2");
+   graphNode* start=getNode(graph2,"1");
    graphNode* end=getNode(graph2,"4");
    cout << "\n\nDFSRec--createLinkedList for GRAPH2:: ";
    printGraph(BFT.DFSRec(start,end));
