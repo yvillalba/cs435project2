@@ -55,19 +55,17 @@ class Graph {
 };
 //********************************question 3b)******************************* 
 Graph createRandomUnweightedGraphIter(int n){
-   Graph graph1;
-   graphNode**	node = new graphNode*[n]();
-   //int i=0;
-   for (int i = 0; i < n; ++i){
+    Graph graph1;
+    graphNode**	node = new graphNode*[n]();
+    for (int i = 0; i < n; ++i){
       string nodeVal=to_string(i);
-       cout<<nodeVal<<endl;
-			node[i] = graph1.addNode(nodeVal);
+      cout<<nodeVal<<endl;
+      node[i] = graph1.addNode(nodeVal);
     }
-   for (int i=0;i<n-1;i++){
+    for (int i=0;i<n-1;i++){
       graph1.addUndirectedEdge(node[i],node[i+1]);
-  }
-  return graph1;
-
+    }
+    return graph1;
 }
 //********************************question 3c)*******************************
 Graph createLinkedList(int n){
@@ -108,21 +106,19 @@ class GraphSearch {
           BFTHelper(graph1, q);
       }
 
-     set<graphNode*> BFTRec(Graph graph1){ 
+     set<graphNode*> BFTRec(Graph graph1){
         set<graphNode*> allNodes=graph1.getallNodes();
         queue<graphNode*> q;// create a queue 
-
         // Do BFT traversal from all  nodes 
-         for (auto node = allNodes.begin(); node != allNodes.end(); node++){
+        for (auto node = allNodes.begin(); node != allNodes.end(); node++){
            //cout<<endl<<(*node)->visited<<endl;
-              if ((*node)->visited == false){
-                  	(*node)->visited = true;// mark source vertex as visited
-                    q.push(*node);// push source vertex into the queue
-	              		BFTHelper(graph1, q); // start BFS traversal from vertex node
-		            }
-                //nodes.insert(*node);
+           if ((*node)->visited == false){
+              (*node)->visited = true;// mark source vertex as visited
+              q.push(*node);// push source vertex into the queue
+              BFTHelper(graph1, q); // start BFS traversal from vertex node
+            }
          }
-        return nodes;
+         return nodes;
     }
      //********************************question 3g)*******************************
      void BFTIterHelper(Graph  graph1, graphNode* node){
