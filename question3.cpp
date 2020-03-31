@@ -176,7 +176,18 @@ void resetNodestounvisited(Graph  graph1){
         for (auto node = allNodes.begin(); node != allNodes.end(); node++){
             (*node)->visited = false;
         }
-     }
+}
+
+//********************************question 3h)*******************************
+ set<graphNode*>  BFTRecLinkedList(Graph  graph2) {
+    GraphSearch BFT;
+    return BFT.BFTRec(graph2);
+}
+//********************************question 3i)*******************************
+set<graphNode*>  BFTIterLinkedList(Graph  graph2) {
+    GraphSearch BFT;
+    return BFT.BFTIter(graph2);
+}
 void printGraph(set <graphNode*> allNodes) { 
     // prints the element 
     cout << "\nThe elements are: "; 
@@ -194,10 +205,10 @@ int main(){
    cout << "\n\ncreateLinkedList for GRAPH2: "; 
    printGraph(graph2.getallNodes());
     cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
-   printGraph(BFT.BFTRec(graph2));
+   printGraph(BFTRecLinkedList(graph2));
     cout << "\n\nBFTIter--createLinkedList for GRAPH2:: "; 
    resetNodestounvisited(graph2);
-   printGraph(BFT.BFTIter(graph2));
+   printGraph(BFTIterLinkedList(graph2));
   // removeUndirectedEdges(b,c);
   return 0;
 }
