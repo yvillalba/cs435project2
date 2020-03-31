@@ -12,7 +12,6 @@ struct graphNode {
    
     string data;
     vector<graphNode*> neighbors;
-    vector<vector<graphNode*>> adjList;
     graphNode* next;
     bool visited;
    
@@ -21,11 +20,10 @@ struct graphNode {
 //********************************question 3a)*******************************
 class Graph {
   private:
-       //graphNode *first;
-       // vector<graphNode*> vertices;
+      
   public:
 
-     set<graphNode*> vertices;//this variable was created to store  the nodes with edges from example node 1 has edge to 2, node 2 has edge to3 , 3 edge to null
+     set<graphNode*> vertices;
      graphNode* addNode(string nodeVal){
         graphNode* node = new graphNode; 
         node->data = nodeVal;// assign data in first node 
@@ -64,9 +62,12 @@ Graph createRandomUnweightedGraphIter(int n){
       cout<<nodeVal<<endl;
       node[i] = graph1.addNode(nodeVal);
     }
-    for (int i=0;i<n-1;i++){
+    int i;
+    for (i=0;i<n-1;i++){
       graph1.addUndirectedEdge(node[i],node[i+1]);
+      graph1.vertices.insert(node[i]);
     }
+    graph1.vertices.insert(node[i]);
     return graph1;
 }
 //********************************question 3c)*******************************
@@ -78,14 +79,13 @@ Graph createLinkedList(int n){
       node[i] = graph1.addNode(nodeVal);
     }
     int i;
-    
     for (i = 0; i < n-1; i++){// add edges to the directed graph
         node[i]->next = node[i+1]; // Link first node with second
         node[i]->neighbors.push_back(node[i+1]);
-       
-        graph1.vertices.insert(node[i]);
+        graph1.vertices.insert(node[i]);//add the node to vertices
         
     }
+     graph1.vertices.insert(node[i]);
     return graph1;
 
 }
@@ -239,4 +239,3 @@ int main(){
   // removeUndirectedEdges(b,c);*/
   return 0;
 }
- 
