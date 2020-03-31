@@ -120,17 +120,15 @@ class GraphSearch {
      set<graphNode*> BFTRec(Graph graph1){
         set<graphNode*> nodes; 
         set<graphNode*> allNodes=graph1.getallNodes();
-             // stores vertex is discovered or not
-            //	vector<bool> discovered(N, false);
         queue<graphNode*> q;// create a queue 
+
         // Do BFT traversal from all  nodes 
          for (auto node = allNodes.begin(); node != allNodes.end(); node++){
            //cout<<endl<<(*node)->visited<<endl;
               if ((*node)->visited == false){
                   	(*node)->visited = true;// mark source vertex as visited
-                     //cout<<endl<<(*node)->visited<<endl;
                     q.push(*node);// push source vertex into the queue
-	              		BFTHelper(graph1, q); // start BFS traversal from vertex i
+	              		BFTHelper(graph1, q); // start BFS traversal from vertex node
 		            }
                 nodes.insert(*node);
          }
