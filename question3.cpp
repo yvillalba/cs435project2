@@ -242,7 +242,7 @@ int main(){
    Graph graph1=createRandomUnweightedGraphIter(n);
    cout << "\ncreateRandomUnweightedGraphIter for GRAPH1: "; 
    printGraph(graph1.getallNodes());
-   GraphSearch BFT;
+   GraphSearch search;
    
    Graph graph2=createLinkedList(n);
    cout << "\n\ncreateLinkedList for GRAPH2: "; 
@@ -251,10 +251,10 @@ int main(){
    graphNode* start=getNode(graph2,"1");
    graphNode* end=getNode(graph2,"4");
    cout << "\n\nDFSRec--createLinkedList for GRAPH2:: ";
-   printGraph(BFT.DFSRec(start,end));
+   printGraph(search.DFSRec(start,end));
    resetNodestounvisited(graph2);
    cout << "\n\nDFSIter--createLinkedList for GRAPH2:: ";
-   printGraph(BFT.DFSIter(start,end));
+   printGraph(search.DFSIter(start,end));
    
    cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
    resetNodestounvisited(graph2);
