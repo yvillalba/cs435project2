@@ -81,16 +81,15 @@ Graph createRandomUnweightedGraphIter(int n){
 Graph createLinkedList(int n){
    Graph graph1;
    // allocate memory
-	 graphNode**	node = new graphNode*[n]();
-		// initialize head pointer for all vertices
-		for (int i = 0; i < n; ++i){
+	 graphNode**	node = new graphNode*[n]();// initialize head pointer for all vertices
+   for (int i = 0; i < n; ++i){
       string nodeVal=to_string(i);
-			node[i] = graph1.addNode(nodeVal);
+      node[i] = graph1.addNode(nodeVal);
     }
     int i;
     for (i = 0; i < n-1; i++){// add edges to the directed graph
-        node[i]->next = node[i+1]; // Link first node with second 
-		}
+        node[i]->next = node[i+1]; // Link first node with second
+    }
      //cout<<endl;
      //printList(node[0]);
      return graph1;
