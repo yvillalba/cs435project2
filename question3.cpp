@@ -91,7 +91,7 @@ Graph createLinkedList(int n){
       node[i]->next = node[i+1]; // Link first node with second 
       
 		}
-     cout<<endl;
+     //cout<<endl;
      //printList(node[0]);
      return graph1;
 
@@ -101,15 +101,15 @@ class GraphSearch {
        //graphNode *first;
        // vector<graphNode*> vertices;
   public:
-     void BFTHelper(Graph const &graph, queue<graphNode*> &q){
+     void BFTHelper(Graph  &graph1, queue<graphNode*> &q){
 	        if (q.empty())
 		          return;
           // pop front node from queue and print it
           graphNode* v = q.front();
-          cout<<endl<<v->data<<endl;
+         // cout<<endl<<v->data<<endl;
           q.pop();
-          cout << v->data << " ";
-          for (int u : graph1.getallNodes()){
+          //cout << v->data << " ";
+          for (auto u : graph1.getallNodes()){
             if (!u->visited){// mark it discovered and push it into queue
 			          u->visited = true;
 			          q.push(u);
@@ -129,7 +129,7 @@ class GraphSearch {
           } 
           */  	
 	        
-        	BFTHelper(graph, q);
+        	BFTHelper(graph1, q);
       }
 
      set<graphNode*> BFTRec(Graph graph1){
