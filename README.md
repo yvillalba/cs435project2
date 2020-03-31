@@ -1,2 +1,2 @@
 # cs435project2
-![](cs435project2/screenShot.png)
+![](https://github.com/yvillalba/cs435project2/blob/master/screenShot.png)
