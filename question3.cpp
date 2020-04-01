@@ -242,27 +242,36 @@ int main(){
    Graph graph1=createRandomUnweightedGraphIter(n);
    cout << "\ncreateRandomUnweightedGraphIter for GRAPH1: "; 
    printGraph(graph1.getallNodes());
-   GraphSearch search;
    
+   GraphSearch search;
+   cout << "\n\ncreateLinkedList for GRAPH2: 6 vertices :: ";  
    Graph graph2=createLinkedList(n);
-   cout << "\n\ncreateLinkedList for GRAPH2: "; 
    printGraph(graph2.getallNodes());
 
    graphNode* start=getNode(graph2,"1");
    graphNode* end=getNode(graph2,"4");
-   cout << "\n\nDFSRec--createLinkedList for GRAPH2:: ";
+   cout << "\n\nDFSRec--createLinkedList for GRAPH2 from "<<start->data<<" to "<<end->data;
    printGraph(search.DFSRec(start,end));
    resetNodestounvisited(graph2);
-   cout << "\n\nDFSIter--createLinkedList for GRAPH2:: ";
+   
+   cout << "\n\nDFSIter--createLinkedList for GRAPH2 from "<<start->data<<" to "<<end->data;
    printGraph(search.DFSIter(start,end));
    
    cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
+   resetNodestounvisited(graph2);
+   printGraph(search.BFTRec(graph2));
+   
+   cout << "\n\nBFTRecLinkedList--createLinkedList for GRAPH2:: ";
    resetNodestounvisited(graph2);
    printGraph(BFTRecLinkedList(graph2));
 
    cout << "\n\nBFTIter--createLinkedList for GRAPH2:: "; 
    resetNodestounvisited(graph2);
+   printGraph(search.BFTIter(graph2));
+   
+   cout << "\n\nBFTIterLinkedList--createLinkedList for GRAPH2:: ";
+   resetNodestounvisited(graph2);
    printGraph(BFTIterLinkedList(graph2));
-  // removeUndirectedEdges(b,c);*/
+  
   return 0;
 }
