@@ -133,10 +133,14 @@ class TopSort {
      return topSort;
   }    
 };
-void printGraph(vector <graphNode*> allNodes) { 
+void printGraph(vector <graphNode*> allNodes,string opt) { 
+  if (opt=="mDFS")
+      opt="<-";
+    else
+      opt="->";
     cout<<"The elements are: ";
     for (auto node : allNodes) {
-            cout<<"->" + node->data;
+            cout<<opt << node->data;
     }
 } 
 //********************************question 4c)*******************************
@@ -159,12 +163,12 @@ void printGraph(vector <graphNode*> allNodes) {
     
     vector<graphNode*> topSort =sort.Kahns(graph1);   
     cout<<"Output of Kahn's:\n"; 
-    printGraph(topSort);
+    printGraph(topSort,"Kahn");
     topSort.clear();
     cout<<endl; 
     topSort =sort.mDFS(graph1); 
     cout<<"Output of mDFS's:\n"; 
-    printGraph(topSort);
+    printGraph(topSort,"mDFS");
     return graph1;
 }
 
