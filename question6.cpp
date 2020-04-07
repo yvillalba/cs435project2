@@ -65,6 +65,15 @@ class GridGraph {
         
         return allNodes;
     }
+    GridNode* getNode(int nodeValue){
+        for (auto u : vertices){
+          if (u->data==nodeValue){
+            return u;
+          }
+        }
+        return NULL;
+
+    }
 };
 //********************************question 6b)*******************************    
 GridGraph createRandomGridGraph(int n){
@@ -91,11 +100,29 @@ GridGraph createRandomGridGraph(int n){
     }
     return graph1;
 }
+//********************************question 6d)*******************************
 //unordered_map<GridNode*, pair<int, int>> distances;
-
+vector<GridNode*> astar(GridNode* sourceNode,GridNode* dstNode){
+   vector<GridNode*> listNodes;
+   //1.Create an empty map of nodes to pairs of distances (g, h). g is the distance so far, and his the estimated distance to the goal using the heuristic. Initialize every node to map to infinity g
+   
+   //2.Calculate the heuristic value for the origin h and set the distance for the origin to (0, h). Let curr be the origin.
+   
+   //3.While curr is not the destination node:
+        //a.“Finalize” curr.
+        //b.Iterate over its neighbors, “relax” each neighbor:
+            //c.For each neighbor that is not finalized, update its distance (if less than the current g value) to the sum of curr’s distance and the weight of the edge between curr and this neighbor.  Calculate the heuristic value for this neighbor and assign it to h.
+        //d.Set curr to the next min node – the node with the smallest g+h value not yet finalized.
+    //4.Return the g value for the destination node
+   return listNodes; 
+}
 int main(){
    int n = 3; 
    GridGraph graph1=createRandomGridGraph(n);
+   GridNode* souceNode=graph1.getNode(0);//node zero is (0,0)
+   GridNode* destNode=graph1.getNode(99);//node 99 is (99,99)
+   vector<GridNode*> listNodes;
+   listNodes=astar(souceNode,destNode);
    
 	
    return(0);
