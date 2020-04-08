@@ -10,7 +10,8 @@ using namespace std;
 
 struct graphNode {
   string data;
-  vector<pair<graphNode*, int> > neighbors;
+  unordered_map<graphNode*, int> neighbors;
+  
    graphNode* next;
 };
 
@@ -28,13 +29,12 @@ class WeightedGraph {
     }
     void addWeightedEdge(graphNode* first,graphNode* second,int edgeWeight){
          // Add an edge from first to second. A new element is inserted to the neighbors of first. 
-        first->neighbors.push_back(make_pair(second,edgeWeight)); 
-        //return first;
-  
+        first->neighbors.insert(make_pair(second,edgeWeight)); 
     }
     void removeDirectedEdge(graphNode* first,graphNode* second){
-        // remove yhe edge from first. A element is deleted to the neighbors of first. 
-       // first->neighbors.erase(remove(first->neighbors.begin(), first->neighbors.end(), second));   
+     
+        // remove the edge from first. A element is deleted to the neighbors of first. 
+         first->neighbors.erase(second); 
     }
     vector <graphNode*>  getallNodes(){
         vector<graphNode*> allNodes= vertices;
@@ -141,10 +141,10 @@ unordered_map<graphNode*, int> djkstras(graphNode* start){
           // Iterate over its neighbors, “relax” each neighbor:
           for (auto neighbor :curr->neighbors){  
                  
-                  //if the node is not present in the hashmap, its distance will be infinity
-                  if ( distances.find(neighbor.first) == distances.end() )  
+              //if the node is not present in the hashmap, its distance will be infinity
+              if ( distances.find(neighbor.first) == distances.end() )  
                     distances.insert(make_pair(neighbor.first, INT_MAX));    
-                  // For each neighbor that is not finalized, update its distance (if less than its current distance) to the sum of curr’s distance and the weight of the edge between curr and this neighbor.
+              // For each neighbor that is not finalized, update its distance (if less than its current distance) to the sum of curr’s distance and the weight of the edge between curr and this neighbor.
                if  (!visited.count(neighbor.first)&&(distances[curr]+neighbor.second)<distances[neighbor.first])
                              
                			distances[neighbor.first] = distances[curr] + neighbor.second; 
