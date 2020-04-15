@@ -28,7 +28,6 @@ class Graph {
      graphNode* addNode(string nodeVal){
         graphNode* node = new graphNode; 
         node->data = nodeVal;// assign data to the new node 
-        //node->neighbors =  
         node->next =NULL;
         node->visited = false;
         return node;
