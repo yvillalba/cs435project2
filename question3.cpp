@@ -220,7 +220,7 @@ graphNode* getNode(Graph graph2,string nodeValue){
   return NULL;
 
 }
-void resetNodestounvisited(Graph  graph1){
+void resetNodesToNotVisited(Graph  graph1){
         set<graphNode*> allNodes=graph1.getallNodes();
         // Do BFT traversal from all  nodes 
         for (auto node = allNodes.begin(); node != allNodes.end(); node++){
@@ -248,25 +248,25 @@ int main(){
    graphNode* end=getNode(graph2,"4");
    cout << "\n\nDFSRec--createLinkedList for GRAPH2 from "<<start->data<<" to "<<end->data;
    printGraph(search.DFSRec(start,end));
-   resetNodestounvisited(graph2);
+   resetNodesToNotVisited(graph2);
    
    cout << "\n\nDFSIter--createLinkedList for GRAPH2 from "<<start->data<<" to "<<end->data;
    printGraph(search.DFSIter(start,end));
    
    cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
-   resetNodestounvisited(graph2);
+   resetNodesToNotVisited(graph2);
    printGraph(search.BFTRec(graph2));
    
    cout << "\n\nBFTRecLinkedList--createLinkedList for GRAPH2:: ";
-   resetNodestounvisited(graph2);
+   resetNodesToNotVisited(graph2);
    printGraph(BFTRecLinkedList(graph2));
 
    cout << "\n\nBFTIter--createLinkedList for GRAPH2:: "; 
-   resetNodestounvisited(graph2);
+   resetNodesToNotVisited(graph2);
    printGraph(search.BFTIter(graph2));
    
    cout << "\n\nBFTIterLinkedList--createLinkedList for GRAPH2:: ";
-   resetNodestounvisited(graph2);
+   resetNodesToNotVisited(graph2);
    printGraph(BFTIterLinkedList(graph2));
   
   return 0;
