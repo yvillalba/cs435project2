@@ -113,7 +113,6 @@ class GraphSearch {
   set<graphNode*> DFSIter(graphNode* start,graphNode* end){
     nodes.clear(); 
     stack<graphNode*> stackNode; // Create a stack for DFS
-   // cout<<"data "<<end->data;
     stackNode.push(start); // Push the source node. 
     while (!stackNode.empty()) { 
         start = stackNode.top(); 
@@ -122,7 +121,6 @@ class GraphSearch {
               start->visited = true;// mark it visited
               nodes.insert(start);
               }
-      //  cout<<"data  "<<start->data;
         if (start->data==end->data){ 
            break;}
         for (auto u : start->neighbors){  // go through  all the vertices adjacent 
@@ -157,7 +155,7 @@ class GraphSearch {
         queue<graphNode*> q;// create a queue 
         // Do BFT traversal from all  nodes 
         for (auto node = allNodes.begin(); node != allNodes.end(); node++){
-           //cout<<endl<<(*node)->visited<<endl;
+          
            if ((*node)->visited == false){
               (*node)->visited = true;// mark source vertex as visited
               q.push(*node);// push source vertex into the queue
@@ -175,9 +173,9 @@ class GraphSearch {
               node = q.front();// pop front node from queue
               q.pop();
               nodes.insert(node);
-              //cout<<endl<<endl;
+              
               for (auto u :node->neighbors){
-                  //cout<<u->data<<endl;
+                  
                   if (!u->visited){// mark it visited and push it into queue
 			              u->visited = true;
 			              q.push(u);
@@ -192,7 +190,7 @@ class GraphSearch {
       
 	       // Do BFT traversal from all  nodes 
          for (auto node = allNodes.begin(); node != allNodes.end(); node++){
-           //cout<<endl<<(*node)->visited<<endl;
+          
               if ((*node)->visited == false){
                 BFTIterHelper(graph1, *node); // start BFS traversal from vertex node
               }
