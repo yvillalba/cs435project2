@@ -4,7 +4,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <set>
-#include <string> // for string and to_string() 
+#include <string> 
 #include <queue>
 #include <stack>
 using namespace std; 
@@ -20,8 +20,7 @@ struct graphNode {
 
 //********************************question 3a)*******************************
 class Graph {
-  private:
-      
+ 
   public:
 
      set<graphNode*> vertices;
