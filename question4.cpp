@@ -3,54 +3,51 @@
 #include <algorithm>
 #include <time.h>
 #include <stdlib.h>
-#include <string> // for string and to_string() 
+#include <string> 
 #include <queue>
 #include <stack>
 #include <unordered_map> 
+#include <unordered_set>
 using namespace std; 
   
 struct graphNode { 
    
     string data;
     vector<graphNode*> neighbors;
-    bool visited;
    
 }; 
 
 //********************************question 4b)*******************************
 class DirectedGraph {
-  private:
-      
   public:
      vector<graphNode*> vertices;
 
      graphNode* addNode(string nodeVal){
         graphNode* node = new graphNode; 
         node->data = nodeVal;// assign data to the new node 
-        node->visited = false;
         return node;
     }
+
     void addDirectedEdge(graphNode* first,graphNode* second){
-         // Add an edge from first to second. A new element is inserted to the neighbors of first. 
+        // Add an edge from first to second. A new element is inserted to the neighbors of first. 
         first->neighbors.push_back(second); 
-        //return first;
-  
     }
+
     void removeDirectedEdge(graphNode* first,graphNode* second){
-        // remove yhe edge from first. A element is deleted to the neighbors of first. 
+        // remove the edge from first. A element is deleted to the neighbors of first. 
         first->neighbors.erase(remove(first->neighbors.begin(), first->neighbors.end(), second));   
     }
+
     vector <graphNode*>  getallNodes(){
-        vector<graphNode*> allNodes= vertices;
-        
-        return allNodes;
+        return vertices;
     }
   
 };
+
+
 class TopSort {
-  private:
-      
-      unordered_map<graphNode*, int> initializeInDegreeMap(DirectedGraph graph) {
+  private:   
+    	unordered_map<graphNode*, int> initializeInDegreeMap(DirectedGraph graph) {
           unordered_map<graphNode*, int> inDegree;// initialize inDegree unordered_map with all 0s
           for (graphNode* node : graph.vertices) {
              inDegree.insert(make_pair(node, 0)); 
@@ -58,13 +55,13 @@ class TopSort {
           // populate inDegree with the current numbers of incoming edges
           for (auto node : graph.vertices) {
             for (auto neighbor : node->neighbors) {
-            inDegree[neighbor] = inDegree[neighbor]+1;
+               inDegree[neighbor] = inDegree[neighbor]+1;
+            }
           }
+         return inDegree;
       }
-
-    return inDegree;
-  }
-  void addNodesWithoutDependenciesToQueue(unordered_map<graphNode*, int> &inDegree, queue<graphNode*> &q) {
+  
+	void addNodWithoutDepToQ(unordered_map<graphNode*, int> &inDegree, queue<graphNode*> &q) {
   
       for (auto curr=inDegree.begin(); curr!=inDegree.end(); ++curr){//go through each key
         if (curr->second == 0) {
@@ -73,75 +70,77 @@ class TopSort {
         }
       }
   }
-  // This function sets a node as visited and then recursively calls itself on all of the node's neighbors.
-  void modifiedDfsHelper(graphNode* node, stack<graphNode*> &stackmDFS) {
-      node->visited=true;
-      for (auto neighbor : node->neighbors) {
-        if (!node->visited) {//check if the node is not visited
-          modifiedDfsHelper(neighbor, stackmDFS);
-        }
-      }
-      stackmDFS.push(node);
-  }
 
   public:
-  //********************************question 4d)*******************************     
+  //********************************question 4d)******************************* 
+	//This is used to perform a topological sort on a directed acyclic graph    
   vector<graphNode*> Kahns(DirectedGraph graph){
           unordered_map<graphNode*, int> inDegree;
           for (graphNode* node : graph.vertices) {
                inDegree.insert(make_pair(node, 0)); 
           }
-          cout<<endl;
+          
           // populate inDegree with the current numbers of incoming edges
           for (auto node : graph.vertices) {
               for (auto neighbor : node->neighbors) {
                 inDegree[neighbor] = inDegree[neighbor]+1;
-               // cout << "{"<<neighbor->data  << ": " << inDegree[neighbor] << "}\n";
               }
           }  
           vector<graphNode*> topSort;
           queue<graphNode*> q;  
-          addNodesWithoutDependenciesToQueue(inDegree, q);
+          addNodWithoutDepToQ(inDegree, q);
           while (!q.empty())	{
                 graphNode* curr = q.front();// first element in q
                 q.pop();
                 topSort.push_back(curr);// add cuur to tail of topSort
                 // decrement all neighbors' in degrees because we've removed curr from our nodes list.
                 for (graphNode* neighbor : curr->neighbors) {
-                    inDegree[neighbor] = inDegree[neighbor]-1;
+                    inDegree[neighbor] = inDegree[neighbor]-1;			
+									  if (inDegree[neighbor] == 0)
+                         q.push(neighbor);
                 }
-                addNodesWithoutDependenciesToQueue(inDegree, q);
+              
           }
       return topSort;
     }
     
   //********************************question 4e)******************************* 
+	//This is used to perform a topological sort on a directed acyclic graph
   vector<graphNode*> mDFS(DirectedGraph graph){   
+		  unordered_set<graphNode*> visited;
       stack<graphNode*> stackmDFS;
+			stack<graphNode*> stackTemp;
       vector<graphNode*> topSort;
       for (auto node : graph.vertices) {
-          if (!node->visited) {
-            modifiedDfsHelper(node, stackmDFS);
+           if(visited.find(node)==visited.end()){
+            visited.insert(node);
+            stackTemp.push(node);
           }
+					while(!stackTemp.empty()){
+            graphNode* currNode = stackTemp.top();// top element in stackTemp
+            stackTemp.pop();
+            for(auto neighNode:currNode->neighbors){
+                visited.insert(node);
+                stackTemp.push(neighNode);
+            }
+          }
+					stackmDFS.push(node);
       }
       while (!stackmDFS.empty()) {
           graphNode* currNode = stackmDFS.top();// top element in stackmDFS
           stackmDFS.pop();
           topSort.push_back(currNode);
       }
-  
+     reverse(topSort.begin(),topSort.end());//reverse the order of topSort vector 
      return topSort;
   }    
 };
-void printGraph(vector <graphNode*> allNodes,string opt) { 
-  if (opt=="mDFS")
-      opt="<-";
-    else
-      opt="->";
+void printGraph(vector <graphNode*> allNodes) { 
     cout<<"The elements are: ";
     for (auto node : allNodes) {
-            cout<<opt << node->data;
+            cout<<"->" << node->data;
     }
+		 cout<<endl; 
 } 
 //********************************question 4c)*******************************
  DirectedGraph createRandomDAGIter(int n){
@@ -163,12 +162,12 @@ void printGraph(vector <graphNode*> allNodes,string opt) {
     
     vector<graphNode*> topSort =sort.Kahns(graph1);   
     cout<<"Output of Kahn's:\n"; 
-    printGraph(topSort,"Kahn");
+    printGraph(topSort);
     topSort.clear();
-    cout<<endl; 
+   
     topSort =sort.mDFS(graph1); 
     cout<<"Output of mDFS's:\n"; 
-    printGraph(topSort,"mDFS");
+    printGraph(topSort);
     return graph1;
 }
 
