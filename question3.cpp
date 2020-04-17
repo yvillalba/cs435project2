@@ -67,16 +67,15 @@ Graph createRandomUnweightedGraphIter(int n){
       string nodeVal=to_string(i);
       node[i] = graph1.addNode(nodeVal);
     }
-		srand(time(NULL));
-		for (int i=0;i<n;i++){
+    srand(time(NULL));
+    for (int i=0;i<n;i++){
         int numEdges=rand()%n;
         for (int j=0;j<numEdges;j++){
-        		int randIndx =rand()%n;
+            int randIndx =rand()%n;
             graph1.addUndirectedEdge(node[i],node[randIndx]);
-						
-				}
-				graph1.vertices.push_back(node[i]);//add the node to vertices
-		}
+	}
+	graph1.vertices.push_back(node[i]);//add the node to vertices
+    }
                    
     return graph1;      
 }
