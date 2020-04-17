@@ -3,287 +3,170 @@
 #include <algorithm>
 #include <time.h>
 #include <stdlib.h>
-#include <set>
-#include <unordered_set>
 #include <string> 
 #include <queue>
 #include <stack>
+#include <unordered_map> 
+#include <unordered_set>
 using namespace std; 
-  
+
 struct graphNode { 
-   
+
     string data;
     vector<graphNode*> neighbors;
-    bool visited;
-   
 }; 
 
-//********************************question 3a)*******************************
-
-class Graph {
- 
+//********************************question 4b)*******************************
+class DirectedGraph {
   public:
-     vector<graphNode*> vertices;
-     graphNode* addNode(string nodeVal){
-        graphNode* node = new graphNode; 
-        node->data = nodeVal;// assign data to the new node 
-        node->visited = false;
-        return node;
+    vector<graphNode*> vertices;
+    graphNode* addNode(string nodeVal){
+    graphNode* node = new graphNode; 
+    node->data = nodeVal;// assign data to the new node 
+     return node;
     }
 
-    void addUndirectedEdge(graphNode* first,graphNode* second){
-         // Add an edge from first to second. A new element is inserted to the neighbors of first. 
-		vector<graphNode*>::iterator it;
-        it = find (	first->neighbors.begin(), first->neighbors.end(),second);
-  		if (it == first->neighbors.end())
-			 first->neighbors.push_back(second); 
-        
-		// Since graph is undirected, add an edge from second to first also 
-        it = find (	second->neighbors.begin(), second->neighbors.end(),first);
-  		if (it == second->neighbors.end())
-			 second->neighbors.push_back(first); 
+    void addDirectedEdge(graphNode* first,graphNode* second){
+      // Add an edge from first to second. A new element is inserted to the neighbors of first. 
+        first->neighbors.push_back(second);
     }
 
-    void removeUndirectedEdges(graphNode* first,graphNode* second){
-        // remove yhe edge from first. A element is deleted to the neighbors of first. 
+    void removeDirectedEdge(graphNode* first,graphNode* second){
+        // remove the edge from first. A element is deleted to the neighbors of first. 
         first->neighbors.erase(remove(first->neighbors.begin(), first->neighbors.end(), second));   
-       // Since graph is undirected, delete an edge from second to first also 
-        second->neighbors.erase(remove(second->neighbors.begin(), second->neighbors.end(), first)); 
     }
 
     vector <graphNode*>  getallNodes(){
-        //set<graphNode*> allNodes= vertices;    
-        return vertices;
+      return vertices;
+    }
+
+};
+
+
+class TopSort {
+  private:   
+    	unordered_map<graphNode*, int> initializeInDegreeMap(DirectedGraph graph) {
+          unordered_map<graphNode*, int> inDegree;// initialize inDegree unordered_map with all 0s
+          for (graphNode* node : graph.vertices) {
+             inDegree.insert(make_pair(node, 0)); 
+          }
+          // populate inDegree with the current numbers of incoming edges
+          for (auto node : graph.vertices) {
+            for (auto neighbor : node->neighbors) {
+              inDegree[neighbor] = inDegree[neighbor]+1;
+            }
+          }
+         return inDegree;
+      }
+      void addNodWithoutDepToQ(unordered_map<graphNode*, int> &inDegree, queue<graphNode*> &q) {
+        for (auto curr=inDegree.begin(); curr!=inDegree.end(); ++curr){//go through each key
+          if (curr->second == 0) {
+            q.push(curr->first);// add node to the queue
+            inDegree[curr->first] = inDegree[curr->first]-1; //decrement the current value's in-degree to -1
+          }
+        }
+      }
+
+      void modifiedDfsHelper(graphNode* node, stack<graphNode*> &stackmDFS,unordered_set<graphNode*> &visited) {
+        visited.insert(node);
+        for (auto neighbor : node->neighbors) {
+          if (visited.find(node)==visited.end()) {//check if the node is not visited
+            modifiedDfsHelper(neighbor, stackmDFS,visited);
+          }
+        }
+        stackmDFS.push(node);
+      }
+      
+
+  public:
+  //********************************question 4d)******************************* 
+	    //This is used to perform a topological sort on a directed acyclic graph    
+      vector<graphNode*> Kahns(DirectedGraph graph){
+          unordered_map<graphNode*, int> inDegree;
+          for (graphNode* node : graph.vertices) {
+               inDegree.insert(make_pair(node, 0)); 
+          }
+          // populate inDegree with the current numbers of incoming edges
+          for (auto node : graph.vertices) {
+              for (auto neighbor : node->neighbors) {
+                inDegree[neighbor] = inDegree[neighbor]+1;
+                }
+          }  
+          vector<graphNode*> topSort;
+          queue<graphNode*> q;  
+          addNodWithoutDepToQ(inDegree, q);
+          while (!q.empty())	{
+                graphNode* curr = q.front();// first element in q
+                q.pop();
+                topSort.push_back(curr);// add cuur to tail of topSort
+                // decrement all neighbors' in degrees because we've removed curr from our nodes list.
+                for (graphNode* neighbor : curr->neighbors) {
+                  inDegree[neighbor] = inDegree[neighbor]-1;
+                  if (inDegree[neighbor] == 0)
+                         q.push(neighbor);
+                }
+                }
+      return topSort;
+    }
+
+    //********************************question 4e)******************************* 
+	  //This is used to perform a topological sort on a directed acyclic graph
+    vector<graphNode*> mDFS(DirectedGraph graph){   
+		  unordered_set<graphNode*> visited;
+      stack<graphNode*> stackmDFS;
+      vector<graphNode*> topSort;
+      for (auto node : graph.vertices) {
+          if (visited.find(node)==visited.end()) {
+            modifiedDfsHelper(node, stackmDFS,visited);
+          }
+      }
+      
+      while (!stackmDFS.empty()) {
+          graphNode* currNode = stackmDFS.top();// top element in stackmDFS
+          stackmDFS.pop();
+          topSort.push_back(currNode);
+      }
+      reverse(topSort.begin(),topSort.end());//reverse the order of topSort vector
+      return topSort;
     }
   
 };
-
-//********************************question 3b)******************************* 
-
-Graph createRandomUnweightedGraphIter(int n){
-	  Graph graph1;
+void printGraph(vector <graphNode*> allNodes) { 
+    cout<<"The elements are: ";
+    for (auto node : allNodes) {
+      cout<<"->" << node->data;
+    }
+    cout<<endl; 
+} 
+//********************************question 4c)*******************************
+ DirectedGraph createRandomDAGIter(int n){
+    DirectedGraph graph1;
+    TopSort sort;
     graphNode**	node = new graphNode*[n]();
     for (int i = 0; i < n; ++i){
       string nodeVal=to_string(i);
       node[i] = graph1.addNode(nodeVal);
     }
-		srand(time(NULL));
-		for (int i=0;i<n;i++){
-        int numEdges=rand()%n;
-			for (int j=0;j<numEdges;j++){
-        		int randIndx =rand()%n;
-				graph1.addUndirectedEdge(node[i],node[randIndx]);
-			}
-			graph1.vertices.push_back(node[i]);//add the node to vertices
-		}
-                   
-    return graph1;      
-}
-
-//********************************question 3c)*******************************
-Graph createLinkedList(int n){
-    Graph graph1;
-    graphNode**	node = new graphNode*[n]();// initialize head pointer for all vertices
-    for (int i = 0; i < n; ++i){
-      string nodeVal=to_string(i);
-      node[i] = graph1.addNode(nodeVal);
-    }
     int i;
-    for (i = 0; i < n-1; i++){// add edges to the directed graph
-		graph1.addUndirectedEdge(node[i],node[i+1]);
-        graph1.vertices.push_back(node[i]);//add the node to vertices
-        
+    for (i=0;i<n;i++){
+        for (int j=i+1;j<n;j++){
+           graph1.addDirectedEdge(node[i],node[j]);
+        }
+       graph1.vertices.push_back(node[i]);
     }
-    graph1.vertices.push_back(node[i]);
+
+    vector<graphNode*> topSort =sort.Kahns(graph1);   
+    cout<<"Output of Kahn's:\n"; 
+    printGraph(topSort);
+    topSort.clear();
+    topSort =sort.mDFS(graph1); 
+    cout<<"Output of mDFS's:\n"; 
+    printGraph(topSort);
     return graph1;
-
 }
-
-
-class GraphSearch {
-  private:
-       vector<graphNode*> nodes;
-  public:
-  //********************************question 3d)*******************************
-     void DFSRecHelper(graphNode* start,graphNode* end){
-
-        start->visited = true;// mark source vertex as visited
-        nodes.push_back(start);
-        if (start->data==end->data){ 
-           return;}
-        for (auto u : start->neighbors){  // Recur for all the vertices adjacent 
-          if (!u->visited){
-             DFSRecHelper(u,end);
-          }
-        }
-     }
-
-     vector<graphNode*> DFSRec(graphNode* start,graphNode* end){
-        nodes.clear(); 
-        // Call the recursive helper function to store the visited node
-        DFSRecHelper(start, end); 
-        return nodes;
-     }
-
-  //********************************question 3e)*******************************
-  vector<graphNode*> DFSIter(graphNode* start,graphNode* end){
-    nodes.clear();
-		stack<graphNode*> stackNode; // Create a stack for DFS
-		unordered_set<graphNode*> visited;
-		stackNode.push(start);// Push the source node. 
-		while (!stackNode.empty()){
-			start = stackNode.top();
-			stackNode.pop();// Pop a vertex from stack
-			// if the vertex is already visited yet, ignore it
-			if (visited.find(start)!=visited.end())
-				continue;
-			visited.insert(start);
-			nodes.push_back(start);
-			if (start->data==end->data){ 
-            return nodes;}
-			// go through  all the vertices adjacent
-			for (auto it = start->neighbors.rbegin();it != start->neighbors.rend(); ++it){
-				graphNode* u = *it;
-				if (visited.find(u)==visited.end())
-					stackNode.push(u);// Push the node. 
-			}
-		}
-
-   return nodes;
-}
-  
-  //********************************question 3f)*******************************
-     void BFTHelper(Graph  graph1, queue<graphNode*> &q,	unordered_set<graphNode*> &visited){
-        if (q.empty())
-            return;
-        graphNode* v = q.front();
-        nodes.push_back(v);
-        q.pop();// pop front node from queue 
-        for (auto u : v->neighbors){
-            if (visited.find(u)==visited.end()){// mark it visited and push it into queue
-              visited.insert(u);
-              q.push(u);
-            }
-        }
-        BFTHelper(graph1, q,visited);
-      }
-
-     vector<graphNode*> BFTRec(Graph graph1){
-        nodes.clear(); 
-				unordered_set<graphNode*> visited;
-        vector<graphNode*> allNodes=graph1.vertices;
-        queue<graphNode*> q;// create a queue 
-        // Do BFT traversal from all  nodes 
-        for (auto node = allNodes.begin(); node != allNodes.end(); node++){
-          if (visited.find(*node)==visited.end()){
-             visited.insert(*node);// mark source vertex as visited
-             q.push(*node);// push source vertex into the queue
-             BFTHelper(graph1, q,visited); // start BFS traversal from vertex node
-          }
-        }
-        return nodes;
-    }
-
-    //********************************question 3g)*******************************
-    void BFTIterHelper(Graph  graph1, graphNode* node,unordered_set<graphNode*> &visited){
-        queue<graphNode*> q;// create a queue used to do BFS
-        visited.insert(node);// mark source vertex as visited
-        q.push(node);// push source vertex into the queue
-        while (!q.empty())	{
-            node = q.front();// pop front node from queue
-            q.pop();
-            nodes.push_back(node);    
-            for (auto u :node->neighbors){
-                if (visited.find(u)==visited.end()){// mark it visited and push it into queue
-		    		visited.insert(u);// mark source vertex as visited
-		    		q.push(u);
-				}
-            }
-		}
-    }
-
-    vector<graphNode*> BFTIter(Graph graph1){
-        nodes.clear(); 
-				unordered_set<graphNode*> visited;
-        vector<graphNode*> allNodes=graph1.vertices;
-        // Do BFT traversal from all  nodes 
-        for (auto node = allNodes.begin(); node != allNodes.end(); node++){
-					if (visited.find(*node)==visited.end()){
-                BFTIterHelper(graph1, *node,visited); // start BFS traversal from vertex node
-             }
-        }
-        return nodes;
-    }
-};
-
-
-//********************************question 3h)*******************************
- vector<graphNode*>  BFTRecLinkedList(Graph  graph2) {
-    GraphSearch BFT;
-    return BFT.BFTRec(graph2);
-}
-
-//********************************question 3i)*******************************
-vector<graphNode*>  BFTIterLinkedList(Graph  graph2) {
-    GraphSearch BFT;
-    return BFT.BFTIter(graph2);
-}
-
-graphNode* getNode(Graph graph2,string nodeValue){  
-    for (auto u : graph2.vertices){
-      if (u->data==nodeValue){
-        return u;
-      }
-    }
-    return NULL;
-
-}
-
-void printGraph(vector <graphNode*> allNodes) { 
-    // prints the element 
-    cout << "\nThe elements are: "; 
-    for (auto it = allNodes.begin(); it != allNodes.end(); it++) 
-      cout << (*it)->data << " "; 
-} 
-
 
 int main(){
-   int n = 6; 
-   Graph graph1=createRandomUnweightedGraphIter(n);
-   cout << "createRandomUnweightedGraphIter for GRAPH1: "; 
-   vector <graphNode*> allNodes=graph1.getallNodes();
-   cout << "\nThe elements are: "<<endl; 
-    for (auto it = allNodes.begin(); it != allNodes.end(); it++){ 
-      cout << (*it)->data << ":{ "; 
-			 for (auto u :(*it)->neighbors){
-				 cout<<u->data<<" ";
-			 }
-			 cout<<endl;	
-		}
-   GraphSearch search;
-   cout << "\ncreateLinkedList for GRAPH2: 6 vertices :: ";  
-   Graph graph2=createLinkedList(n);
-   printGraph(graph2.getallNodes());
-
-   graphNode* start=getNode(graph2,"1");
-   graphNode* end=getNode(graph2,"4");
-   cout << "\n\nDFSRec--createLinkedList for GRAPH2 from "<<start->data<<" to "<<end->data;
-   printGraph(search.DFSRec(start,end));
-   
-   cout << "\n\nDFSIter--createLinkedList for GRAPH2 from "<<start->data<<" to "<<end->data;
-   printGraph(search.DFSIter(start,end));
-   
-   cout << "\n\nBFTRec--createLinkedList for GRAPH2:: "; 
-   printGraph(search.BFTRec(graph2));
-   
-   cout << "\n\nBFTRecLinkedList--createLinkedList for GRAPH2:: ";
-   printGraph(BFTRecLinkedList(graph2));
-  
-   cout << "\n\nBFTIter--createLinkedList for GRAPH2:: "; 
-   printGraph(search.BFTIter(graph2));
-   
-   cout << "\n\nBFTIterLinkedList--createLinkedList for GRAPH2:: ";
-   printGraph(BFTIterLinkedList(graph2));
-  
-  return 0;
+   int n = 1000; 
+   DirectedGraph graph1=createRandomDAGIter(n);
+   return(0);
 }
