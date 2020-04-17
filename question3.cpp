@@ -33,15 +33,15 @@ class Graph {
 
     void addUndirectedEdge(graphNode* first,graphNode* second){
          // Add an edge from first to second. A new element is inserted to the neighbors of first. 
-				vector<graphNode*>::iterator it;
-        it = find (	first->neighbors.begin(), first->neighbors.end(),second);
-  			if (it == first->neighbors.end())
-					 first->neighbors.push_back(second); 
+	vector<graphNode*>::iterator it;
+        it = find (first->neighbors.begin(), first->neighbors.end(),second);
+  		if (it == first->neighbors.end())
+			first->neighbors.push_back(second); 
         
-				// Since graph is undirected, add an edge from second to first also 
-        it = find (	second->neighbors.begin(), second->neighbors.end(),first);
-  			if (it == second->neighbors.end())
-					 second->neighbors.push_back(first); 
+	// Since graph is undirected, add an edge from second to first also 
+        it = find (second->neighbors.begin(), second->neighbors.end(),first);
+  		if (it == second->neighbors.end())
+		      second->neighbors.push_back(first); 
     }
 
     void removeUndirectedEdges(graphNode* first,graphNode* second){
