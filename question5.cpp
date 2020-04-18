@@ -11,8 +11,7 @@ using namespace std;
 struct graphNode {
   string data;
   unordered_map<graphNode*, int> neighbors;
-  
-   graphNode* next;
+  graphNode* next;
 };
 
 //********************************question 5b)*******************************
@@ -37,9 +36,7 @@ class WeightedGraph {
          first->neighbors.erase(second); 
     }
     vector <graphNode*>  getallNodes(){
-        vector<graphNode*> allNodes= vertices;
-        
-        return allNodes;
+        return vertices;
     }
     graphNode* getNode(string nodeValue){
         for (auto u : vertices){
@@ -54,7 +51,7 @@ class WeightedGraph {
 };
 vector<int> getRandomWeight(int n){
       int totalEdges=n*(n-1);
-      unordered_set<int> unOrset; 
+      unordered_set<int> uniqList; 
       srand(time(NULL));
       vector <int> numList;
       int num;
@@ -63,8 +60,8 @@ vector<int> getRandomWeight(int n){
         num=rand()%totalEdges+1;
         //cout<<num<<endl;
         i++;
-        if (unOrset.find(num) == unOrset.end()){//the number is not in the set
-            unOrset.insert(num); 
+        if (uniqList.find(num) == uniqList.end()){//the number is not in the set
+            uniqList.insert(num); 
             numList.push_back(num);//push it to the list 
         }
         else //the number is in the set, so decrease the counter i by one to generate a new random number
@@ -95,7 +92,6 @@ WeightedGraph createRandomUnweightedGraphIter(int n){
       }
     }
     
-  
     return graph1;
 }
 //********************************question 5d)*******************************
@@ -136,7 +132,7 @@ unordered_map<graphNode*, int> djkstras(graphNode* start){
      // Let curr be the origin.
      graphNode* curr=start;
      // While curr is not null and its distance is not infinity.
-     while(curr!=NULL){
+     while(curr!=NULL && distances[curr]!=INT_MAX){
           visited.insert(curr);// “Finalize” curr.
           // Iterate over its neighbors, “relax” each neighbor:
           for (auto neighbor :curr->neighbors){  
@@ -147,8 +143,7 @@ unordered_map<graphNode*, int> djkstras(graphNode* start){
               // For each neighbor that is not finalized, update its distance (if less than its current distance) to the sum of curr’s distance and the weight of the edge between curr and this neighbor.
                if  (!visited.count(neighbor.first)&&(distances[curr]+neighbor.second)<distances[neighbor.first])
                              
-               			distances[neighbor.first] = distances[curr] + neighbor.second; 
-				                 
+               			distances[neighbor.first] = distances[curr] + neighbor.second; 		                 
           }
 
           // Set curr to the next min distance node – the node with the smallest distance that is not yet finalized.
@@ -164,8 +159,7 @@ int main(){
    unordered_map<graphNode*, int> distances;
    distances=djkstras(graph1.getNode("0"));
   for (auto curr=distances.begin(); curr!=distances.end(); ++curr){//go through each key
-        	cout << "Path from vertex 0 to vertex " << curr->first->data << " has minimum "
-				"cost of " << curr->second << "\n";
+        	cout << "Path from vertex 0 to vertex " << curr->first->data << " has minimum cost of " << curr->second << "\n";
         
   }
 	
