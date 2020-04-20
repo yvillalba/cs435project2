@@ -16,10 +16,10 @@ struct GridNode {
 class GridGraph {
   private:
       bool isNeighbor(GridNode* first, GridNode* second, int n) { 
-				int firstX=(first->data)%n;
-				int firstY=(first->data)/n;
-				int secondX=(second->data)%n;
-				int secondY=(second->data)/n;
+        int firstX=(first->data)%n;
+	int firstY=(first->data)/n;
+	int secondX=(second->data)%n;
+	int secondY=(second->data)/n;
       //check neighbor above 
         if (firstX-1==secondX && firstY==secondY)
           return true;
@@ -62,14 +62,16 @@ class GridGraph {
        // Since graph is undirected, delete an edge from second to first also 
         second->neighbors.erase(first); 
     }
+	
     unordered_map <int,GridNode*>  getallNodes(){
         return vertices;
     }
+	
     GridNode* getNode(int nodeValue){
-			if ( vertices.find(nodeValue) == vertices.end() )  
-			 		return NULL;
-			else
-			    return vertices.find(nodeValue)->second;
+	if ( vertices.find(nodeValue) == vertices.end() )  
+	    return NULL;
+	else
+	    return vertices.find(nodeValue)->second;
     }
 };
 //********************************question 6b)*******************************    
