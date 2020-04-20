@@ -2,7 +2,6 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-
 #include <climits>
 #include <string>
 #include <time.h>
@@ -16,24 +15,28 @@ struct GridNode {
 //********************************question 6a)*******************************
 class GridGraph {
   private:
-      bool isNeighbor(int first, int second, int n) { 
+      bool isNeighbor(GridNode* first, GridNode* second, int n) { 
+				int firstX=(first->data)%n;
+				int firstY=(first->data)/n;
+				int secondX=(second->data)%n;
+				int secondY=(second->data)/n;
       //check neighbor above 
-        if ((first%n)-1==(second%n) && (first/n)==(second/n))
+        if (firstX-1==secondX && firstY==secondY)
           return true;
       //check neighbor below 
-        if ((first%n)+1==(second%n) && (first/n)==(second/n))
+        if (firstX+1==secondX && firstY==secondY)
           return true;
       //check left neighbor     
-        if ((first%n)==(second%n) and (first/n)-1==(second/n))
+        if (firstX==secondX && firstY-1==secondY)
           return true;
       //check right neighbor  
-        if ((first%n)==(second%n) and (first/n)+1==(second/n))
+        if (firstX==secondX && firstY+1==secondY)
           return true;
         return false;
       }
       
   public:
-      vector<GridNode*> vertices;
+      unordered_map<int,GridNode*> vertices;
       GridNode* addNode(int nodeVal){
           GridNode* node = new GridNode; 
           node->data = nodeVal;// assign data to the new node 
@@ -45,7 +48,7 @@ class GridGraph {
     void addUndirectedEdge(GridNode* first,GridNode* second, int n){
       //chech if first and second are neighbors
     
-      if (isNeighbor(first->data,second->data,n)){
+      if (isNeighbor(first,second,n)){
         cout<<"from "<<first->data<<":("<<(first->data%n)<<","<<(first->data)/n<<") to " <<second->data<<":("<<(second->data%n)<<","<<(second->data)/n<<") and vice versa\n";
          // Add an edge from first to second. A new element is inserted to the neighbors of first. 
         first->neighbors.insert(second); 
@@ -59,19 +62,14 @@ class GridGraph {
        // Since graph is undirected, delete an edge from second to first also 
         second->neighbors.erase(first); 
     }
-    vector <GridNode*>  getallNodes(){
-        vector<GridNode*> allNodes= vertices;
-        
-        return allNodes;
+    unordered_map <int,GridNode*>  getallNodes(){
+        return vertices;
     }
     GridNode* getNode(int nodeValue){
-        for (auto u : vertices){
-          if (u->data==nodeValue){
-            return u;
-          }
-        }
-        return NULL;
-
+			if ( vertices.find(nodeValue) == vertices.end() )  
+			 		return NULL;
+			else
+			    return vertices.find(nodeValue)->second;
     }
 };
 //********************************question 6b)*******************************    
@@ -91,8 +89,8 @@ GridGraph createRandomGridGraph(int n){
           if (chance==1){
             //cout<<"despues "<<node[i]->data<<" to "<<node[j]->data<<"\n";
             graph1.addUndirectedEdge(node[i],node[j],n);
-            
-            graph1.vertices.push_back(node[i]);
+            graph1.vertices.insert(make_pair(node[i]->data,node[i])); 
+        
           }
         }
       }
@@ -122,13 +120,9 @@ GridNode* minDist(unordered_map<GridNode*, pair<int, int>>& distances, unordered
 void generatePath(unordered_map<GridNode*,GridNode*> parent,vector<GridNode*> &path,GridNode* sourceNode,GridNode* curr){
   if (curr==sourceNode)
      return;
-  else{
-     curr=parent[curr];
-     path.push_back(curr);
-     generatePath(parent,path,sourceNode,curr);
-
-  }
-
+  curr=parent[curr];
+  path.push_back(curr);
+  generatePath(parent,path,sourceNode,curr);
 }
 //********************************question 6d)*******************************
 
@@ -159,7 +153,8 @@ vector<GridNode*> astar(GridNode* sourceNode,GridNode* dstNode,int n){
             //if the node is not present in the hashmap, its distance will be infinity
             if ( distances.find(neighbor) == distances.end() )  {
                     distances.insert(make_pair(neighbor, make_pair(INT_MAX,0)));
-                    parent.insert(make_pair(neighbor, nullptr));   }
+                    parent.insert(make_pair(neighbor, nullptr));   
+						}
             //c.For each neighbor that is not finalized, update its distance (if less than the current g value) to the sum of curr’s distance and the weight of the edge between curr and this neighbor.                
             if  (!visited.count(neighbor)&&(distances[curr].first+1)<distances[neighbor].first){
                    distances[neighbor].first = distances[curr].first + 1;
@@ -174,14 +169,14 @@ vector<GridNode*> astar(GridNode* sourceNode,GridNode* dstNode,int n){
           curr=minDist(distances,visited);
     }
     //4.Return path from source to destination 
-    if ( parent.find(dstNode) == parent.end() )  
+    if ( parent.find(dstNode) == parent.end()){  
        cout<<"\nThere is not path between "<< sourceNode->data<<" and "<<dstNode->data;
+		}
     else{
         path.push_back(dstNode);
         generatePath(parent,path,sourceNode,dstNode);
      }
       
-    
    return path; 
 }
 int main(){
@@ -195,7 +190,7 @@ int main(){
 
    path=astar(sourceNode,destNode,n);
    for (auto p : path) {
-          cout<<p->data<<"("<<(p->data)%n<<","<<(p->data)/n<<")->";
+          cout<<p->data<<"("<<(p->data)%n<<","<<(p->data)/n<<")<-";
       } 
    return(0);
 }
